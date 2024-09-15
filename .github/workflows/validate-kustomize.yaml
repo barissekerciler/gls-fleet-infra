@@ -1,0 +1,34 @@
+name: Validate Kustomize
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          sudo snap install yq
+          sudo snap install kustomize --classic
+          wget https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz
+          tar xf kubeval-linux-amd64.tar.gz
+          sudo mv kubeval /usr/local/bin
+          wget https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz
+          tar xf kubeconform-linux-amd64.tar.gz
+          sudo mv kubeconform /usr/local/bin
+
+      - name: Run validation script
+        run: bash scripts/validate.sh --kustomize
+
+      - name: Check script exit code
+        run: |
+          if [ $? -ne 0 ]; then
+            echo "Validation failed. Please check the script output for details."
+            exit 1
+          fi

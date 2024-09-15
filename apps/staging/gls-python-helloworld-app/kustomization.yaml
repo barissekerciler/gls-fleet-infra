@@ -1,21 +1,15 @@
----
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: staging-gls-interview
-
 resources:
   - ../../base/gls-python-helloworld-app
-
 images:
   - name: ghcr.io/barissekerciler/gls-python-helloworld-app
     newName: ghcr.io/barissekerciler/gls-python-helloworld-app # {"$imagepolicy": "flux-system:staging-gls-python-helloworld-app:name"}
-    newTag: "staging-1.0.1" # {"$imagepolicy": "flux-system:staging-gls-python-helloworld-app:tag"}
-
+    newTag: "staging-8a3f741-1726437584" # {"$imagepolicy": "flux-system:staging-gls-python-helloworld-app:tag"}
 patches:
   - path: deployment-patch.yaml
-
 namePrefix: staging-
-
 replicas:
   - name: gls-python-helloworld-app
     count: 1

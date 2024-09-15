@@ -8,7 +8,8 @@ resources:
 
 images:
   - name: ghcr.io/barissekerciler/gls-python-helloworld-app
-    newTag: "staging-1.0.1" # {"$imagepolicy": "flux-system:staging-gls-python-helloworld-app"}
+    newName: ghcr.io/barissekerciler/gls-python-helloworld-app # {"$imagepolicy": "flux-system:staging-gls-python-helloworld-app:name"}
+    newTag: "staging-1.0.1" # {"$imagepolicy": "flux-system:staging-gls-python-helloworld-app:tag"}
 
 patches:
   - path: deployment-patch.yaml

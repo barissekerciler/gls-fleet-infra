@@ -20,6 +20,9 @@ spec:
   imageRepositoryRef:
     name: gls-python-helloworld-app
     namespace: flux-system
+  filterTags:
+    pattern: "^staging-[a-fA-F0-9]+-(?P<ts>.*)"
+    extract: "$ts"
   policy:
-    semver:
-      range: 1.x.x
+    numerical:
+      order: asc

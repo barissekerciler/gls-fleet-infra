@@ -6,16 +6,13 @@ metadata:
 spec:
   interval: 30s
   dependsOn:
-    - name: infrastructure
+    - name: staging
   sourceRef:
     kind: GitRepository
     name: flux-system
   path: ./apps/production
   prune: true
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
+
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -24,14 +21,8 @@ metadata:
   namespace: flux-system
 spec:
   interval: 30s
-  dependsOn:
-    - name: infrastructure
   sourceRef:
     kind: GitRepository
     name: flux-system
   path: ./apps/staging
   prune: true
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age

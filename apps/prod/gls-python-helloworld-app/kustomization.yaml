@@ -4,8 +4,7 @@ kind: Kustomization
 namespace: prod-gls-interview
 
 resources:
-  - ../../base
-  - deployment-patch.yaml
+  - ../../base/gls-python-helloworld-app
 
 images:
   - name: ghcr.io/barissekerciler/gls-python-helloworld-app
@@ -15,3 +14,7 @@ patches:
   - path: deployment-patch.yaml
 
 namePrefix: prod-
+
+replicas:
+  - name: gls-python-helloworld-app
+    count: 3

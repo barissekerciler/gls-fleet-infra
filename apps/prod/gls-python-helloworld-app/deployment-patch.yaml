@@ -5,12 +5,10 @@ metadata:
   labels:
     app: gls-python-helloworld-app
 spec:
-  replicas: 3
-      containers:
-          resources:
-            requests:
-              cpu: 10m
-              memory: 64Mi
-            limits:
-              cpu: 50m
-              memory: 128Mi
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+    limits:
+      cpu: 50m
+      memory: 128Mi

@@ -1,21 +1,15 @@
----
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: prod-gls-interview
-
 resources:
   - ../../base/gls-python-helloworld-app
-
 images:
   - name: ghcr.io/barissekerciler/gls-python-helloworld-app
     newName: ghcr.io/barissekerciler/gls-python-helloworld-app # {"$imagepolicy": "flux-system:prod-gls-python-helloworld-app:name"}
-    newTag: "v1.0.1" # {"$imagepolicy": "flux-system:prod-gls-python-helloworld-app:tag"}
-
+    newTag: "v1.0.5" # {"$imagepolicy": "flux-system:prod-gls-python-helloworld-app:tag"}
 patches:
   - path: deployment-patch.yaml
-
 namePrefix: prod-
-
 replicas:
   - name: gls-python-helloworld-app
     count: 3

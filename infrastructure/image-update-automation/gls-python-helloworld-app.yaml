@@ -9,7 +9,7 @@ spec:
     namespace: flux-system
   policy:
     semver:
-      range: ^1.x.x-rc.x
+      range: 1.0.0-rc.x
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy

@@ -5,6 +5,7 @@ namespace: staging-gls-interview
 
 resources:
   - ../../base/gls-python-helloworld-app
+  - image-policy.yaml
 
 images:
   - name: ghcr.io/barissekerciler/gls-python-helloworld-app

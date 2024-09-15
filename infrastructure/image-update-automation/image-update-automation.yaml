@@ -11,14 +11,14 @@ spec:
   git:
     checkout:
       ref:
-        branch: main
+        branch: master
     commit:
       author:
         email: fluxcdbot@users.noreply.github.com
         name: fluxcdbot
       messageTemplate: "{{range .Changed.Changes}}{{print .OldValue}} -> {{println .NewValue}}{{end}}"
     push:
-      branch: main
+      branch: master
   update:
     path: ./clusters/prod
     strategy: Setters

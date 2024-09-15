@@ -5,11 +5,10 @@ namespace: staging-gls-interview
 
 resources:
   - ../../base/gls-python-helloworld-app
-  - image-policy.yaml
 
 images:
   - name: ghcr.io/barissekerciler/gls-python-helloworld-app
-    newTag: "staging-1.0.1"
+    newTag: "staging-1.0.1" # {"$imagepolicy": "flux-system:staging-gls-python-helloworld-app"}
 
 patches:
   - path: deployment-patch.yaml

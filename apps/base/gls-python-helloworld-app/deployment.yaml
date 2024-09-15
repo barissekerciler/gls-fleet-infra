@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gls-python-helloworld-app
+  labels:
+    app: gls-python-helloworld-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gls-python-helloworld-app
+  template:
+    metadata:
+      labels:
+        app: gls-python-helloworld-app
+    spec:
+      containers:
+        - name: gls-python-helloworld-app
+          image: ghcr.io/barissekerciler/gls-python-helloworld-app
+          ports:
+            - containerPort: 5000
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 50m
+              memory: 64Mi

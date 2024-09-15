@@ -7,9 +7,13 @@ spec:
   imageRepositoryRef:
     name: gls-python-helloworld-app
     namespace: flux-system
+  filterTags:
+    pattern: "^staging-[a-fA-F0-9]+-(?P<ts>.*)"
+    extract: "$ts"
   policy:
-    semver:
-      range: 1.0.0-rc.x
+    numerical:
+      order: asc
+
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
@@ -20,9 +24,6 @@ spec:
   imageRepositoryRef:
     name: gls-python-helloworld-app
     namespace: flux-system
-  filterTags:
-    pattern: "^staging-[a-fA-F0-9]+-(?P<ts>.*)"
-    extract: "$ts"
   policy:
-    numerical:
-      order: asc
+    semver:
+      range: v1.x.x

@@ -106,39 +106,6 @@ After installation, Flux will automatically synchronize the cluster state with t
 - For more detailed troubleshooting, use `kubectl` commands to inspect specific resources.
 - Monitor image update automation: `flux get images all`
 
-### Future Enhancements: Advanced Monitoring
-
-While not currently implemented due to task constraints, a robust monitoring solution using the Prometheus stack is recommended for production environments. This setup would include:
-
-1. **Prometheus**: For metrics collection and storage.
-2. **Alertmanager**: For handling alerts and notifications.
-3. **Grafana**: For visualization and dashboarding.
-
-This advanced monitoring setup would provide:
-
-- Real-time visibility into cluster and application performance.
-- Custom alerting based on predefined thresholds.
-- Comprehensive dashboards for both infrastructure and application metrics.
-- Long-term metrics storage for trend analysis and capacity planning.
-
-Implementation of this monitoring stack would involve:
-
-- Deploying the Prometheus Operator using Flux.
-- Creating custom ServiceMonitors for Flux components and applications.
-- Configuring Alertmanager for intelligent alert routing and aggregation.
-- Designing Grafana dashboards for visualizing Flux, Kubernetes, and application-specific metrics.
-
-This enhanced monitoring capability would significantly improve observability and incident response times in a production environment.
-
-## Best Practices
-
-1. Always use pull requests for significant changes.
-2. Regularly update Flux and its components.
-3. Use semantic versioning for production releases.
-4. Implement proper access controls and RBAC for your Git repository and Kubernetes cluster.
-5. Regularly backup your Git repository and etcd data.
-6. Use separate branches for staging and production configurations.
-7. Implement automated testing before promoting changes to production.
 
 ## Configuration Details
 
@@ -170,7 +137,31 @@ The application repository is an integral part of the overall system and represe
 
 ## Monitoring and Alerting
 
-### Basic Monitoring Setup
+### Future Enhancements: Advanced Monitoring
+
+While not currently implemented due to task constraints, a robust monitoring solution using the Prometheus stack is recommended for production environments. This setup would include:
+
+1. **Prometheus**: For metrics collection and storage.
+2. **Alertmanager**: For handling alerts and notifications.
+3. **Grafana**: For visualization and dashboarding.
+
+This advanced monitoring setup would provide:
+
+- Real-time visibility into cluster and application performance.
+- Custom alerting based on predefined thresholds.
+- Comprehensive dashboards for both infrastructure and application metrics.
+- Long-term metrics storage for trend analysis and capacity planning.
+
+Implementation of this monitoring stack would involve:
+
+- Deploying the Prometheus Operator using Flux.
+- Creating custom ServiceMonitors for Flux components and applications.
+- Configuring Alertmanager for intelligent alert routing and aggregation.
+- Designing Grafana dashboards for visualizing Flux, Kubernetes, and application-specific metrics.
+
+This enhanced monitoring capability would significantly improve observability and incident response times in a production environment.
+
+### Basic Monitoring Setup as Example
 
 To implement basic monitoring for the application and cluster:
 

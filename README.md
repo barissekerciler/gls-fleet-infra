@@ -168,3 +168,141 @@ The application code for this infrastructure is maintained in a separate reposit
 
 The application repository is an integral part of the overall system and represents the actual workload being deployed through this GitOps setup. It's important to note that changes to the application code in this repository will trigger the image build and update process managed by FluxCD in this infrastructure repository.
 
+## Monitoring and Alerting
+
+### Basic Monitoring Setup
+
+To implement basic monitoring for the application and cluster:
+
+1. **Deploy Prometheus and Grafana:**
+   Use the kube-prometheus-stack Helm chart via Flux:
+
+   ```yaml:clusters/prod/monitoring/kube-prometheus-stack.yaml
+   apiVersion: helm.toolkit.fluxcd.io/v2beta1
+   kind: HelmRelease
+   metadata:
+     name: kube-prometheus-stack
+     namespace: monitoring
+   spec:
+     chart:
+       spec:
+         chart: kube-prometheus-stack
+         sourceRef:
+           kind: HelmRepository
+           name: prometheus-community
+         version: "39.x"
+     interval: 1h
+     values:
+       grafana:
+         enabled: true
+       prometheus:
+         enabled: true
+   ```
+
+2. **Configure ServiceMonitors:**
+   Create ServiceMonitors for your application:
+
+   ```yaml:apps/base/gls-python-helloworld-app/servicemonitor.yaml
+   apiVersion: monitoring.coreos.com/v1
+   kind: ServiceMonitor
+   metadata:
+     name: gls-python-helloworld-app
+   spec:
+     selector:
+       matchLabels:
+         app: gls-python-helloworld-app
+     endpoints:
+     - port: http
+       path: /metrics
+   ```
+
+3. **Setup Dashboards:**
+   Create Grafana dashboards for visualizing metrics. You can import existing dashboards or create custom ones using Grafana's UI.
+
+### Alerting for Critical Issues
+
+To set up alerting for critical issues:
+
+1. **Configure Alertmanager:**
+   Alertmanager is included in the kube-prometheus-stack. Configure it in the HelmRelease:
+
+   ```yaml:clusters/prod/monitoring/kube-prometheus-stack.yaml
+   spec:
+     values:
+       alertmanager:
+         config:
+           global:
+             resolve_timeout: 5m
+           route:
+             group_by: ['job']
+             group_wait: 30s
+             group_interval: 5m
+             repeat_interval: 12h
+             receiver: 'slack'
+           receivers:
+           - name: 'slack'
+             slack_configs:
+             - api_url: 'https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX'
+               channel: '#alerts'
+   ```
+
+2. **Define PrometheusRules:**
+   Create alert rules for your application:
+
+   ```yaml:apps/base/gls-python-helloworld-app/alertrules.yaml
+   apiVersion: monitoring.coreos.com/v1
+   kind: PrometheusRule
+   metadata:
+     name: gls-python-helloworld-app-alerts
+   spec:
+     groups:
+     - name: gls-python-helloworld-app
+       rules:
+       - alert: ApplicationDown
+         expr: up{job="gls-python-helloworld-app"} == 0
+         for: 5m
+         labels:
+           severity: critical
+         annotations:
+           summary: "Application is down"
+           description: "gls-python-helloworld-app has been down for more than 5 minutes."
+       - alert: HighCPUUsage
+         expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+         for: 15m
+         labels:
+           severity: warning
+         annotations:
+           summary: "High CPU usage detected"
+           description: "CPU usage is above 80% for more than 15 minutes."
+   ```
+
+3. **Integrate with Notification Channels:**
+   Configure Alertmanager to send notifications to your preferred channels (e.g., Slack, email, PagerDuty).
+
+## Health Checks and Probes
+
+The application deployment includes both liveness and readiness probes to ensure the container is healthy, responsive, and ready to serve traffic:
+
+### Liveness Probe
+Checks if the application is running and responsive:
+- **Endpoint**: `/` (returns a 200 status code)
+- Initial delay: 10 seconds
+- Check interval: Every 10 seconds
+- Timeout: 5 seconds
+- Failure threshold: 3 consecutive failures
+
+The liveness probe helps Kubernetes determine if the application is running correctly and restart the pod if necessary.
+
+### Readiness Probe
+Checks if the application is ready to serve traffic:
+- **Endpoint**: `/` (returns a 200 status code)
+- Initial delay: 5 seconds
+- Check interval: Every 10 seconds
+- Timeout: 2 seconds
+- Success threshold: 1 successful check
+- Failure threshold: 3 consecutive failures
+
+The readiness probe ensures that traffic is only sent to pods that are ready to handle requests. This is particularly useful during deployments and when the application needs time to initialize.
+
+These probes help maintain the overall health and reliability of the application in the Kubernetes cluster.
+

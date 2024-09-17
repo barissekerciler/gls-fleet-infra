@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - gls-python-helloworld-app.yaml
   - image-update-automation.yaml
+  - error-on-purpose
